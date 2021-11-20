@@ -1,0 +1,54 @@
+.submit-container {
+    width: 150px;
+}
+
+h1 {
+    font-family: 'Courier New', monospace;
+}
+
+input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:15px;
+    height:15px;
+    background:white;
+    border-radius:5px;
+    border:2px solid #919191;
+}
+
+input[type='checkbox']:checked {
+    background: #4fedff;
+}
+
+/* Place the navbar at the bottom of the page, and make it stick */
+.navbar {
+    background-color: white;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0px;
+}
+  
+/* Style the links inside the navigation bar */
+.navbar a {
+    float: right;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 25px 50px;
+    text-decoration: none;
+    font-size: 17px;
+}
+  
+/* Change the color of links on hover */
+.navbar a:hover {
+    cursor: pointer;
+    background-color: #ddd;
+    color: black;
+}
+  
+/* Add a color to the active/current link */
+.navbar a.active {
+    background-color: #4fedff;
+    color: black;
+}

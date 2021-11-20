@@ -1,0 +1,5 @@
+*.zip
+tmp_uploads/*
+templates_c/*
+.vscode
+*.jbeam
