@@ -19,7 +19,7 @@
     </div>
 
     <div class="navbar" style="display: none;">
-        <a class="active" onclick="submit_form(); return false;"><h1>Download Updated File</h1></a>
+        <a class="active" onclick="submit_form(); return false;"><h1 style="margin: 0px;">Download Updated File</h1></a>
     </div>
 </body>
 </html>
