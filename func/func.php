@@ -3,6 +3,7 @@ function getEngineData($jbeam_content) {
     $liness = preg_split("/((\r?\n)|(\r\n?))/", $jbeam_content);
     $len = count($liness);
     $i = 0;
+    $matched_gear_ratio = false;
     
     $engine_data = [];
     $lines = [];
@@ -14,7 +15,8 @@ function getEngineData($jbeam_content) {
         $matches = [];
         
         preg_match("/(\"gearRatios\":)(\[[\-\d,\. ]+\])/", $lines[$i], $matches);
-        if (count($matches) > 2) {
+        if (count($matches) > 2 && $matched_gear_ratio == false) {
+            $matched_gear_ratio = true;
             $engine_data['gear_ratios'] = $matches[2]; $i += 1; continue;
         }
 

@@ -1,0 +1,269 @@
+{ // ["Customizable_Supercharger","Customizable_Supercharger","Supercharger Tuner"]
+
+"sub_sub_sttl" :
+{
+	"information":
+		{
+			"name":"Vortices", 
+			"value":  4000,			
+		}
+		
+		"slotType" : "Dynamic_SC",
+		"variables":
+		[
+			["name", "type", "unit", "category", "default", "min", "max", "title", "description"] // Format
+			["$S8Cgr0", "range", "Ratio", "Supercharger",           2,      1,      10,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
+			["$S7Cov0", "range", "%",     "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
+			["$S1Cce0", "range", "RPM",   "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"          , {"stepDis":10}]   ,
+			["$S5Cpr0", "range", "%",     "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
+			["$S2Cpp0", "range", "PSI",   "Supercharger",         2.0,    1.5,    10.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
+		    ["$S6Ccl0", "range", "%",     "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
+			["$S4ine0", "range", "%",     "Audio:Supercharger",    60,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
+			["$S3tch0", "range", "%",     "Audio:Supercharger",   100,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
+			["$S9Clb0", "range", "lobes", "Supercharger",           4,      3,      4,  "Lobes",             "Physical lobes on the rotors" , {"stepDis":1}]    ,
+		]
+		
+	"supercharger": 
+	{
+        "gearRatio":"$S8Cgr0",
+        "clutchEngageRPM":"$S1Cce0",
+        "pressureRatePSI":"$=($S5Cpr0)+1",
+        "pressurePSIPer1kRPM":"$=(($S2Cpp0*4)/(($EMrp+(950-($S7Cov0*7)))*0.001))*0.5",
+        "crankLossPer1kRPM": "$= ((($S6Ccl0/(100/12)) - (2-0.001)) - (((($S6Ccl0/(100/12)) /2) -1)*(2-0.001))+0.002) -(($S7Cov0*2)/100000)"
+		"type":"roots",
+        "lobes":"$S9Clb0",
+        "twistedLobes":true, 
+        "whineLoopEvent": "event:>Vehicle>Forced_Induction>Supercharger_02>supercharger",
+        "whineVolumePerPSI": "$=($S4ine0+(0.5*$S4ine0))/1000",
+        "whinePitchPer10kRPM": "$=(($S3tch0/100)*0.5)/3",
+        "boostController":[
+            //throttle in %, factor
+            [0,     0.5],
+            [100,     1],
+        ],
+    },
+    "mainEngine":
+	{
+        //supercharger name
+        "supercharger":"supercharger",
+        "instantAfterFireCoef": "$=(($S7Cov0*2)-30)/100",
+        "sustainedAfterFireCoef": "$=(($S7Cov0*2)-30)/50",
+    },
+
+}
+"sub_sub_stc" :
+{
+	
+	
+	"information":
+		{
+			"name":"Centrifugal",
+			"value":  5000,			
+		}
+		
+		"slotType" : "Dynamic_SC",
+		"variables":
+		[
+			["name", "type", "unit", "category", "default", "min", "max", "title", "description"] // Format
+			["$S7Cov1", "range", "%",   "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
+			["$S1Cce1", "range", "RPM", "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"           , {"stepDis":10}]  ,
+			["$S5Cpr1", "range", "%",   "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
+			["$S2Cpp1", "range", "PSI", "Supercharger",         2.0,    1.5,   10.0,  "Power",             "PSI Limit"                    , {"stepDis":0.1}]  ,			
+		    ["$S6Ccl1", "range", "%",   "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
+			["$S4ine1", "range", "%",   "Audio:Supercharger",    50,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
+			["$S3tch1", "range", "%",   "Audio:Supercharger",   150,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
+		]
+		
+	"supercharger": 
+	{
+        
+		"gearRatio":2,
+        "clutchEngageRPM":"$S1Cce1",
+        "pressureRatePSI":"$=($S5Cpr1)+1",       
+        "pressurePSIPer1kRPM" : "$=($S2Cpp1/(($EMrp+(125-($S7Cov1*5.25)))*0.001))*0.5",
+        "crankLossPer1kRPM": "$= ((($S6Ccl1/(100/4)) - (2-0.001)) - (((($S6Ccl1/(100/4)) /2) -1)*(2-0.001))+0.002) -(($S7Cov1*2)/100000)"
+		"type":"centrifugal",
+        "lobes":0,
+        //"twistedLobes":true, //centrifugal
+        "whineLoopEvent": "event:>Vehicle>Forced_Induction>Turbo_06>turbo_spin",
+        "whineVolumePerPSI": "$=($S4ine1+(0.5*$S4ine1))/1000",
+        "whinePitchPer10kRPM": "$=(($S3tch1/66.66)*2)",
+        "boostController":[
+            //throttle in %, factor
+            [0,     0.5],
+            [100,     1],
+        ],
+    },
+    "mainEngine":
+	{
+        //supercharger name
+        "supercharger":"supercharger",
+        "instantAfterFireCoef": "$=(($S7Cov1*2)-50)/100",
+        "sustainedAfterFireCoef": "$=(($S7Cov1*2)-50)/50",
+    },
+
+}
+"sub_sub_str" :
+{
+	"information":
+		{
+			"name":"Roots",
+			"value":  3000,			
+		}
+		
+		"slotType" : "Dynamic_SC",
+		"variables":
+		[
+			["name", "type", "unit", "category", "default", "min", "max", "title", "description"] // Format
+			["$S8Cgr2", "range", "Ratio", "Supercharger",           2,      2,      10,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
+			["$S7Cov2", "range", "%",     "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
+			["$S1Cce2", "range", "RPM",   "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"          , {"stepDis":10}]   ,
+			["$S5Cpr2", "range", "%",     "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
+			["$S2Cpp2", "range", "PSI",   "Supercharger",         2.0,    1.5,    10.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
+		    ["$S6Ccl2", "range", "%",     "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
+			["$S4ine2", "range", "%",     "Audio:Supercharger",    80,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
+			["$S3tch2", "range", "%",     "Audio:Supercharger",   100,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
+			["$S9Clb2", "range", "lobes", "Supercharger",           3,      2,      4,  "Lobes",             "Physical lobes on the rotors" , {"stepDis":1}]    ,
+		]
+		
+	"supercharger": 
+	{
+        "gearRatio":"$=($S8Cgr2*2)",
+        "clutchEngageRPM":"$S1Cce2",
+        "pressureRatePSI":"$=($S5Cpr2)+1",
+        "pressurePSIPer1kRPM":"$=(($S2Cpp2*2)/(($EMrp+(550-($S7Cov2*9.5)))*0.001))*0.5", 
+		"crankLossPer1kRPM": "$= ((($S6Ccl2/(100/16)) - (2-0.001)) - (((($S6Ccl2/(100/16)) /2) -1)*(2-0.001))+0.002) -(($S7Cov2*2)/100000)"
+        "type":"roots",
+        "lobes":"$S9Clb2",
+        "twistedLobes":false,//Roots Type
+        "whineLoopEvent": "event:>Vehicle>Forced_Induction>Supercharger_02>supercharger",
+        "whineVolumePerPSI": "$=($S4ine2+(0.5*$S4ine2))/1000",
+        "whinePitchPer10kRPM": "$=(($S3tch2/100)*0.5)/3",
+        "boostController":[
+            //throttle in %, factor
+            [0,     0.5],
+            [100,     1],
+        ],
+    },
+    "mainEngine":
+	{
+        //supercharger name
+        "supercharger":"supercharger",
+        "instantAfterFireCoef": "$=(($S7Cov2*2)-15)/100",
+        "sustainedAfterFireCoef": "$=(($S7Cov2*2)-15)/50",       
+	},
+
+}
+"sub_sub_sts" :
+{
+	"information":
+		{
+			"name":"Screws",
+			"value":  6000,			
+		}
+		
+		"slotType" : "Dynamic_SC",
+		"variables":
+		[
+			["name", "type", "unit", "category", "default", "min", "max", "title", "description"] // Format
+			["$S8Cgr3", "range", "Ratio", "Supercharger",           2,      2,      10,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
+			["$S7Cov3", "range", "%",     "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
+			["$S1Cce3", "range", "RPM",   "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"          , {"stepDis":10}]   ,
+			["$S5Cpr3", "range", "%",     "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
+			["$S2Cpp3", "range", "PSI",   "Supercharger",         2.0,    1.5,    10.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
+		    ["$S6Ccl3", "range", "%",     "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
+			["$S4ine3", "range", "%",     "Audio:Supercharger",    50,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
+			["$S3tch3", "range", "%",     "Audio:Supercharger",   150,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
+			["$S9Clb3", "range", "lobes", "Supercharger",           4,      3,      4,  "Lobes",             "Physical lobes on the rotors" , {"stepDis":1}]    ,
+			
+		]
+		
+	"supercharger": 
+	{
+        "gearRatio":"$S8Cgr3",
+        "clutchEngageRPM":"$S1Cce3",
+        "pressureRatePSI":"$=($S5Cpr3)+1",
+        "pressurePSIPer1kRPM":"$=(($S2Cpp3*2)/(($EMrp+(2-($S7Cov3*5.15)))*0.001))*0.5",
+        "crankLossPer1kRPM": "$= ((($S6Ccl3/(100/8)) - (2-0.001)) - (((($S6Ccl3/(100/8)) /2) -1)*(2-0.001))+0.002) -(($S7Cov3*2)/100000)"
+		"type":"screws",
+        "lobes":"$S9Clb3",
+        //"twistedLobes":false, 
+        "whineLoopEvent": "event:>Vehicle>Forced_Induction>Supercharger_01>supercharger",
+        "whineVolumePerPSI": "$=($S4ine3+(0.5*$S4ine3))/1000",
+        "whinePitchPer10kRPM": "$=((($S3tch3+50)/100)*0.5)/3",
+        "boostController":[
+            //throttle in %, factor
+            [0,     0.5],
+            [100,     1],
+        ],
+    },
+    "mainEngine":
+	{
+        //supercharger name
+        "supercharger":"supercharger",
+        "instantAfterFireCoef": "$=(($S7Cov3*2)-40)/100",
+        "sustainedAfterFireCoef": "$=(($S7Cov3*2)-40)/50",
+    },
+
+}
+"sub_s_menu": 
+	{
+		"information":{
+        "authors":"BeamNG",
+        "name":"Rootors",
+        "value":    0,
+    }
+    "slotType" : "sub_slot_sttl",
+	"slots" : 
+		[
+			["type", "default", "description"] // Format			
+			["Dynamic_SC","","Type"]
+		],
+	  
+  
+}
+"Customizable_Supercharger": 
+	{
+		"information":{
+        "authors":"BeamNG",
+        "name":"Customizable Supercharger",
+        "value":    0,
+    }
+    "slotType" : "Customizable_Supercharger",
+	"slots" : 
+		[
+			["type","default", "description"] // Format
+			["sub_slot_sttl","sub_s_menu", "Internals",{"coreSlot":true}]			
+		],
+	  "vehicleController": 
+	  {
+		  "$EMrp":"maxRPM",
+		  "maxRPM":"$EMrp",
+		  "topSpeedLimit":999,
+	  }
+	  
+	  "variables":
+		[
+			["name",  "type",  "unit", "category", "default","min", "max", "title", "description"] // Format			
+	        ["$EMrp", "range", "RPM" , "Supercharger"   5500, 500, 15000, "Redline", "Set engine redline"{"stepDis":1}]
+		],
+		
+		
+    // "vehicleController": {
+        // "revMatchThrottle":0.2
+    // },
+    "flexbodies": [],
+    "props": [],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"selfCollision":false},
+         {"collision":false}
+         //{"nodeWeight":5.34},         
+         {"group":""},
+    ],
+    "beams": [],
+    "triangles": [],
+}
+}
