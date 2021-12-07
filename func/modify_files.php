@@ -151,6 +151,24 @@ function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash, $en
                         unset($posted['mrpm']);
                         break;
                     }
+
+                    preg_match("/(([\d]+(\.[\d]+)?),\s([\d]+(\.[\d]+)?),\s([\d](\.[\d]+)))/", $lines[$i], $matches);
+                    if ($matches[2] >= $posted['mrpm']) {
+                        $engine_data .= $lines[$i] . "\n";
+                        $i += 1;
+                        while (true) {
+                            preg_match("/^\],/", $lines[$i], $matches);
+                            if (count($matches) > 0) {
+                                $engine_data .= $lines[$i] . "\n";
+                                $i += 1;
+                                unset($posted['mrpm']);
+                                break;
+                            }
+                            $i += 1;
+                        }
+                        break;
+                    }
+
                     $engine_data .= $lines[$i] . "\n";
                     $i += 1;
                 }
@@ -235,10 +253,11 @@ function modifyEngineTorque(&$engine_data, $torque_values, &$posted) {
     $engine_data .= ",\n[" . $torque_values[0][0] . ", " . $torque_values[0][1] . "],\n";
     $torque_values[1][1] = ($torque_values[1][1] + $torque_to_add) * $torque_to_mul;
     $engine_data .= "[" . $torque_values[1][0] . ", " . $torque_values[1][1] . "],\n";
+    $min_rpm = $torque_values[1][0];
     while (true) {
         $torque_values[$i][1] = ($torque_values[$i][1] + $torque_to_add) * $torque_to_mul;
         if (isset($posted['mrpm'])) {
-            $torque_values[$i][0] = ($torque_values[$i][0] / $cur_max_rpm) * $posted['mrpm'];
+            $torque_values[$i][0] = ((($torque_values[$i][0] - $min_rpm) / ($cur_max_rpm - $min_rpm)) * ($posted['mrpm'] - $min_rpm)) + $min_rpm;
         }
         $engine_data .= "[" . (int)$torque_values[$i][0] . ", " . (int)$torque_values[$i][1] . "],\n";
         $i += 1;
