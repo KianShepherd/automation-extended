@@ -124,9 +124,9 @@ function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash, $en
                 $i += 1;
                 while (true) {
                     $matches = [];
-
-                    preg_match("/1\.[0]+,\s1\.[0]+/", $lines[$i], $matches);
-                    if (count($matches) > 0) {
+                    // cursed regex
+                    preg_match("/(([\d]+(\.[\d]+)?),\s(([\d]+)(\.[\d]+)?),\s(([\d])(\.[\d]+)))/", $lines[$i], $matches);
+                    if ($matches[5] == "1" && $matches[8] = "1") {
                         $engine_data .= $lines[$i] . "\n";
                         $i += 1;
                         $engine_data .= "[$posted[mrpm], 1.000000, 1.000000],\n";
@@ -142,21 +142,11 @@ function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash, $en
                             $i += 1;
                         }
                         break;
-                    }
-
-                    preg_match("/^\],/", $lines[$i], $matches);
-                    if (count($matches) > 0) {
-                        $engine_data .= $lines[$i] . "\n";
-                        $i += 1;
-                        unset($posted['mrpm']);
-                        break;
-                    }
-
-                    preg_match("/(([\d]+(\.[\d]+)?),\s([\d]+(\.[\d]+)?),\s([\d](\.[\d]+)))/", $lines[$i], $matches);
-                    if ($matches[2] >= $posted['mrpm']) {
+                    } else if ($matches[2] >= $posted['mrpm']) {
                         $engine_data .= $lines[$i] . "\n";
                         $i += 1;
                         while (true) {
+                            $matches = [];
                             preg_match("/^\],/", $lines[$i], $matches);
                             if (count($matches) > 0) {
                                 $engine_data .= $lines[$i] . "\n";
@@ -167,8 +157,13 @@ function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash, $en
                             $i += 1;
                         }
                         break;
+                    } else if (count($matches) < 1) {
+                        $engine_data .= $lines[$i] . "\n";
+                        $i += 1;
+                        unset($posted['mrpm']);
+                        break;
                     }
-
+                   
                     $engine_data .= $lines[$i] . "\n";
                     $i += 1;
                 }
