@@ -51,7 +51,7 @@ function modifyTireData($jbeam_content, $friction_value, $sliding_friction_value
     return $tire_data;
 }
 
-function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash) {
+function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash, $engine_data) {
     $liness = preg_split("/((\r?\n)|(\r\n?))/", $jbeam_content);
     $len = count($liness);
     $i = 1;
@@ -86,7 +86,9 @@ function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash) {
             if (count($matches) > 0) {
                 $i += 1;
                 $engine_data .= "\"maxRPM\":" . (((int)$posted['mrpm']) + 50) . ",";
-                unset($posted['mrpm']);
+                if ($engine_data['has_turbo'] == false) {
+                    unset($posted['mrpm']);
+                }
                 continue;
             }
         }
@@ -111,6 +113,47 @@ function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash) {
                 }
                 modifyEngineTorque($engine_data, $torque_values, $posted);
                 continue;
+            }
+        }
+
+        if ($engine_data['has_turbo'] && isset($posted['mrpm'])) {  
+            preg_match("/engineDef/", $lines[$i], $matches);
+
+            if (count($matches) > 0) {
+                $engine_data .= $lines[$i] . "\n";
+                $i += 1;
+                while (true) {
+                    $matches = [];
+
+                    preg_match("/1\.[0]+,\s1\.[0]+/", $lines[$i], $matches);
+                    if (count($matches) > 0) {
+                        $engine_data .= $lines[$i] . "\n";
+                        $i += 1;
+                        $engine_data .= "[$posted[mrpm], 1.000000, 1.000000],\n";
+                        while (true) {
+                            $matches = [];
+                            preg_match("/^\],/", $lines[$i], $matches);
+                            if (count($matches) > 0) {
+                                $engine_data .= $lines[$i] . "\n";
+                                $i += 1;
+                                unset($posted['mrpm']);
+                                break;
+                            }
+                            $i += 1;
+                        }
+                        break;
+                    }
+
+                    preg_match("/^\],/", $lines[$i], $matches);
+                    if (count($matches) > 0) {
+                        $engine_data .= $lines[$i] . "\n";
+                        $i += 1;
+                        unset($posted['mrpm']);
+                        break;
+                    }
+                    $engine_data .= $lines[$i] . "\n";
+                    $i += 1;
+                }
             }
         }
 
@@ -171,10 +214,6 @@ function modifyEngineData($jbeam_content, &$posted, $filename_no_ext, $hash) {
                 unset($posted['mfuel']);
                 continue;
             }
-        }
-
-        if (isset($posted['mshiftspeed'])) {
-            die();
         }
 
         $engine_data .= $lines[$i];
@@ -253,7 +292,7 @@ unlink($jbeam_folder . "camso_engine.jbeam");
 unlink($jbeam_folder . "wheels_front.jbeam");
 unlink($jbeam_folder . "wheels_rear.jbeam");
 
-$new_engine_jbeam = modifyEngineData($engine_content, $_POST, $file_name_no_ext, $_POST['hash']);
+$new_engine_jbeam = modifyEngineData($engine_content, $_POST, $file_name_no_ext, $_POST['hash'], $engine_data);
 $new_tire_jbeam_front = modifyTireData($front_tire_content, $_POST['fmfric'], $_POST['fmsfric'], $_POST['fmofric']);
 $new_tire_jbeam_rear = modifyTireData($rear_tire_content, $_POST['rmfric'], $_POST['rmsfric'], $_POST['rmofric']);
 

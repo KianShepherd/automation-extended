@@ -4,6 +4,7 @@ function getEngineData($jbeam_content) {
     $len = count($liness);
     $i = 0;
     $matched_gear_ratio = false;
+    $has_turbo = false;
     
     $engine_data = [];
     $lines = [];
@@ -36,6 +37,10 @@ function getEngineData($jbeam_content) {
             continue;
         }
 
+        preg_match("/turbo/", $lines[$i], $matches);
+        if (count($matches) > 0 && $has_turbo == false) {
+            $has_turbo = true;
+        }
         
         $i += 1;
         if ($i >= $len) {
@@ -44,15 +49,14 @@ function getEngineData($jbeam_content) {
     }
     $torque_curve = $engine_data['torque_curve'];
     $matches = [];
-    preg_match("/([\d]+)/", $torque_curve[count($torque_curve) - 1], $matches);
-    $max_rpm = $matches[1];
-    $engine_data['max_rpm'] = $max_rpm;
+    preg_match("/(([\d]+(\.[\d]+)?),\s([\d]+(\.[\d]+)?))/", $torque_curve[count($torque_curve) - 1], $matches);
+    $max_rpm = $matches[2];
+    $torque_at_max = $matches[4];
 
-    $matches = [];
-    preg_match("/([\d]+\.[\d]+)/", $torque_curve[count($torque_curve) - 1], $matches);
-    $torque_at_max = $matches[1];
+    $engine_data['max_rpm'] = $max_rpm;
     $engine_data['torque_at_max'] = $torque_at_max;
-    //pprint($jbeam_content);
+    $engine_data['has_turbo'] = $has_turbo;
+    
     return $engine_data;
 }
 
@@ -102,7 +106,6 @@ function getTireData($jbeam_content) {
         }
     }
     
-    //pprint($jbeam_content);
     return $tire_data;
 }
 
