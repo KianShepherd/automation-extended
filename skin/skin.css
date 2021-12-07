@@ -28,8 +28,7 @@ input[type='checkbox']:checked {
     width: 100%;
     left: 0px;
 }
-  
-/* Style the links inside the navigation bar */
+
 .navbar a {
     float: right;
     display: block;
@@ -39,16 +38,29 @@ input[type='checkbox']:checked {
     text-decoration: none;
     font-size: 17px;
 }
-  
-/* Change the color of links on hover */
+
 .navbar a:hover {
     cursor: pointer;
     background-color: #ddd;
     color: black;
 }
-  
-/* Add a color to the active/current link */
+
 .navbar a.active {
     background-color: #4fedff;
     color: black;
+}
+
+
+.loader {
+    border: 8px solid #919191;
+    border-top: 8px solid #4fedff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
