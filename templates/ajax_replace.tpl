@@ -25,7 +25,7 @@
                             <div id="gear_ratio_replace">
                                 <td>
                                     <textarea rows="1" cols="100" name="gears" id="gears"
-                                        style="resize: none;">{$gear_str}</textarea>
+                                        style="resize: none;">{$engine.gear_ratio_str}</textarea>
                                 </td>
                             </div>
                         </tr>
@@ -40,11 +40,11 @@
                             <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>RPM Limit</b></td>
                             <td style="padding: 20px;">
                                 <textarea rows="1" cols="3" name="mrpm" id="mrpm"
-                                    style="resize: none;">{$max_rpm}</textarea>
+                                    style="resize: none;">{$engine.max_rpm}</textarea>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>Flat torque increase<br>(current value at rpm limit: {$torque_at_max})</b></td>
+                            <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>Flat torque increase<br>(current value at rpm limit: {$engine.torque_at_max})</b></td>
                             <td style="padding: 20px;">
                                 <textarea rows="1" cols="3" name="atorque" id="atorque"
                                     style="resize: none;">0</textarea>
@@ -112,28 +112,28 @@
             <tr>
                 <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Friction coefficient</h3></td>
                 <td style="padding: 20px;">
-                    <textarea rows="1" cols="8" name="fmfric" id="fmfric" style="resize: none;">{$front.friccoef}</textarea>
+                    <textarea rows="1" cols="8" name="fmfric" id="fmfric" style="resize: none;">{$front_tires.friccoef}</textarea>
                 </td>
                 <td>
-                <textarea rows="1" cols="8" name="rmfric" id="rmfric" style="resize: none;">{$rear.friccoef}</textarea>
+                <textarea rows="1" cols="8" name="rmfric" id="rmfric" style="resize: none;">{$rear_tires.friccoef}</textarea>
             </td>
             </tr>
             <tr>
                 <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Sliding friction coefficient</h3></td>
                 <td style="padding: 20px;">
-                    <textarea rows="1" cols="8" name="fmsfric" id="fmsfric" style="resize: none;">{$front.slidingcoef}</textarea>
+                    <textarea rows="1" cols="8" name="fmsfric" id="fmsfric" style="resize: none;">{$front_tires.slidingcoef}</textarea>
                 </td>
                 <td>
-                    <textarea rows="1" cols="8" name="rmsfric" id="rmsfric" style="resize: none;">{$rear.slidingcoef}</textarea>
+                    <textarea rows="1" cols="8" name="rmsfric" id="rmsfric" style="resize: none;">{$rear_tires.slidingcoef}</textarea>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Grip loss offroad</h3></td>
                 <td style="padding: 20px;">
-                    <textarea rows="1" cols="8" name="fmofric" id="fmofric" style="resize: none;">{$front.treadcoef}</textarea>
+                    <textarea rows="1" cols="8" name="fmofric" id="fmofric" style="resize: none;">{$front_tires.treadcoef}</textarea>
                 </td>
                 <td>
-                    <textarea rows="1" cols="8" name="rmofric" id="rmofric" style="resize: none;">{$rear.treadcoef}</textarea>
+                    <textarea rows="1" cols="8" name="rmofric" id="rmofric" style="resize: none;">{$rear_tires.treadcoef}</textarea>
                 </td>
             </tr>
         </table>

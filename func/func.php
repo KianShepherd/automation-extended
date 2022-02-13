@@ -1,111 +1,30 @@
 <?php
 function getEngineData($jbeam_content) {
-    $liness = preg_split("/((\r?\n)|(\r\n?))/", $jbeam_content);
-    $len = count($liness);
-    $i = 0;
-    $matched_gear_ratio = false;
-    $has_turbo = false;
-    
     $engine_data = [];
-    $lines = [];
-    foreach ($liness as $line) {
-        $lines[] = trim($line);
-    }
-
-    while (true) {
-        $matches = [];
-        
-        preg_match("/(\"gearRatios\":)(\[[\-\d,\. ]+\])/", $lines[$i], $matches);
-        if (count($matches) > 2 && $matched_gear_ratio == false) {
-            $matched_gear_ratio = true;
-            $engine_data['gear_ratios'] = $matches[2]; $i += 1; continue;
-        }
-
-        preg_match("/\[\"rpm\", \"torque\"\]/", $lines[$i], $matches);
-        //pprint($matches);
-        if (count($matches) > 0) {
-            // match torque curve
-            $i += 1; 
-            $torque_values = [];
-            while (true) {
-                $matches = [];
-                if ($lines[$i] == "],") { $i += 1; break; }
-                $torque_values[] = substr($lines[$i], 0, strlen($lines[$i]) - 1);
-                $i += 1;
-            }
-            $engine_data['torque_curve'] = $torque_values;
-            continue;
-        }
-
-        preg_match("/turbo/", $lines[$i], $matches);
-        if (count($matches) > 0 && $has_turbo == false) {
-            $has_turbo = true;
-        }
-        
-        $i += 1;
-        if ($i >= $len) {
-            break;
-        }
-    }
-    $torque_curve = $engine_data['torque_curve'];
-    $matches = [];
-    preg_match("/(([\d]+(\.[\d]+)?),\s([\d]+(\.[\d]+)?))/", $torque_curve[count($torque_curve) - 1], $matches);
-    $max_rpm = $matches[2];
-    $torque_at_max = $matches[4];
-
-    $engine_data['max_rpm'] = $max_rpm;
-    $engine_data['torque_at_max'] = $torque_at_max;
-    $engine_data['has_turbo'] = $has_turbo;
+    $engine_data['torque_curve'] = $jbeam_content['Camso_Engine']['mainEngine']['torque'];
+    $engine_data['gear_ratios'] = $jbeam_content['Camso_Transmission']['gearbox']['gearRatios'];
+    $engine_data['gear_ratio_str'] = implode(", ", $engine_data['gear_ratios']);
+    $engine_data['max_rpm'] = end($jbeam_content['Camso_Engine']['mainEngine']['torque'])[0];
+    $engine_data['torque_at_max'] = end($jbeam_content['Camso_Engine']['mainEngine']['torque'])[1];
+    $engine_data['has_turbo'] = array_key_exists('Camso_Turbo', $jbeam_content);
     
     return $engine_data;
 }
 
-
 function getTireData($jbeam_content) {
-    $liness = preg_split("/((\r?\n)|(\r\n?))/", $jbeam_content);
-    $len = count($liness);
-    $i = 0;
-    $second_match = false;
-    
     $tire_data = [];
-    $lines = [];
-    foreach ($liness as $line) {
-        $lines[] = trim($line);
-    }
-
-    while (true) {
-        $matches = [];
-        
-        preg_match("/({\"frictionCoef\":)(\d\.?\d*)/", $lines[$i], $matches);
-        if (count($matches) > 2) {
-            if ($second_match == false) {
-                $matches = [];
-                $second_match = true;
-            } else {
-                $tire_data['friccoef'] = $matches[2]; $i += 1; continue;
-            }
+    foreach ($jbeam_content as $line) {
+        if (array_key_exists('treadCoef', $line)) {     
+            $tire_data['treadcoef'] = $line['treadCoef'];
         }
-
-        preg_match("/({\"slidingFrictionCoef\":)(\d\.?\d*)/", $lines[$i], $matches);
-        if (count($matches) > 2) {
-            $tire_data['slidingcoef'] = $matches[2];
-            $i += 1;
-            continue;
+        if (array_key_exists('slidingFrictionCoef', $line)) {     
+            $tire_data['slidingcoef'] = $line['slidingFrictionCoef'];
         }
-
-        preg_match("/({\"treadCoef\":)(\d\.?\d*)/", $lines[$i], $matches);
-        if (count($matches) > 2) {
-            $tire_data['treadcoef'] = $matches[2];
-            $i += 1;
-            continue;
-        }
-        
-        $i += 1;
-        if ($i >= $len) {
-            break;
+        if (array_key_exists('frictionCoef', $line)) {     
+            $tire_data['friccoef'] = $line['frictionCoef'];
         }
     }
-    
+
     return $tire_data;
 }
 
@@ -136,6 +55,27 @@ function GetStrippedFileContent($jbeam_folder, $filename) {
         $jbeam_content .= $line . "\n";
     }
     return $jbeam_content;
+}
+
+function jbeam_to_json($jbeam_folder, $filename) {
+    $file_content = preg_split("/\n/", GetStrippedFileContent($jbeam_folder, $filename));
+    $full_content = "";
+    foreach($file_content as $line) {
+        $_line = trim($line);
+        $full_content .= preg_replace("/,,/",",", ($_line . ","));
+    }
+    $full_content = preg_replace("/,]/","]", $full_content);
+    $full_content = preg_replace("/,}/","}", $full_content);
+    $full_content = preg_replace("/\[,\]/","[]", $full_content);
+    $full_content = preg_replace("/{,/","{", $full_content);
+    $full_content = preg_replace("/\[,/","[", $full_content);
+    $full_content = preg_replace("/:,/",":", $full_content);
+    $full_content = preg_replace("/,,/",",", ($full_content));
+    $full_content = preg_replace("/(\d) {/","$1, {", ($full_content));
+    $full_content = preg_replace("/\"\s?{/","\", {", ($full_content));
+    $full_content = substr($full_content, 0, -1);
+
+    return json_decode($full_content, true);
 }
 
 
