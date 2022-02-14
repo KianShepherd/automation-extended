@@ -42,6 +42,11 @@
                                 <textarea rows="1" cols="3" name="mrpm" id="mrpm"
                                     style="resize: none;">{$engine.max_rpm}</textarea>
                             </td>
+                            <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>VVL Start RPM</b></td>
+                            <td style="padding: 20px;">
+                                <textarea rows="1" cols="3" name="vvlrpm" id="vvlrpm"
+                                    style="resize: none;">0</textarea>
+                            </td>
                         </tr>
                         <tr>
                             <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>Flat torque increase<br>(current value at rpm limit: {$engine.torque_at_max})</b></td>
@@ -49,11 +54,21 @@
                                 <textarea rows="1" cols="3" name="atorque" id="atorque"
                                     style="resize: none;">0</textarea>
                             </td>
+                            <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>VVL Flat torque increase</b></td>
+                            <td style="padding: 20px;">
+                                <textarea rows="1" cols="3" name="vvlatorque" id="vvlatorque"
+                                    style="resize: none;">0</textarea>
+                            </td>
                         </tr>
                         <tr>
-                            <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>multiplicative torque increase<br>(applied after flat increase)</b></td>
+                            <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>Multiplicative torque increase<br>(applied after flat increase)</b></td>
                             <td style="padding: 20px;">
                                 <textarea rows="1" cols="3" name="mtorque" id="mtorque"
+                                    style="resize: none;">1.0</textarea>
+                            </td>
+                            <td style="text-align: center; font-family: 'Courier New', monospace; font-size:18px;  font-family: 'Courier New', monospace;"><b>VVL multiplicative torque increase</b></td>
+                            <td style="padding: 20px;">
+                                <textarea rows="1" cols="3" name="vvlmtorque" id="vvlmtorque"
                                     style="resize: none;">1.0</textarea>
                             </td>
                         </tr>
@@ -91,6 +106,11 @@
                         <tr>
                             <td><input name="mfuel" type="checkbox"></td>
                             <td style="font-size:18px;  font-family: 'Courier New', monospace;"><b>Max Fuel Efficency</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="font-size:18px;  font-family: 'Courier New', monospace;"><b>Flywheel Inertia</b></td>
+                            <td><textarea rows="1" cols="20" name="inertia" id="inertia"
+                                style="resize: none;">{$engine.inertia}</textarea></td>
                         </tr>
                     </table>
                 </td>

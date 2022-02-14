@@ -39,8 +39,9 @@ function modifyEngineData($jbeam_filename,  &$posted, $filename_no_ext, $hash) {
     if (isset($posted['mfuel'])) {
         $engine_data['Camso_Engine']['mainEngine']['burnEfficiency'] = [[0.00, 1.00], [0.5, 1.0], [1.0, 1.0]];
     }
-    $engine_data['Camso_Transmission']['gearbox']['gearRatios'] = preg_split("/([\s]+)?,([\s]+)?/", $posted['gears']);
-    $engine_data['Camso_Engine']['mainEngine']['maxRPM'] = intval($posted['max_rpm']) + 50;
+    $engine_data['Camso_Transmission']['gearbox']['gearRatios'] = array_map('floatval', preg_split("/([\s]+)?,([\s]+)?/", $posted['gears']));
+    $engine_data['Camso_Engine']['mainEngine']['maxRPM'] = intval($posted['mrpm']) + 50;
+    $engine_data['Camso_Engine']['mainEngine']['inertia'] = floatval($posted['inertia']);
     $mod_power = modifyEngineTorque($engine_data, $posted);
     $engine_data['Camso_Engine']['mainEngine']['torque'] = $mod_power['new_torque'];
     if (array_key_exists("Camso_Turbo", $engine_data)) {
@@ -69,12 +70,15 @@ function modifyEngineTorque($engine_torque, $posted) {
         }
     }
 
-    if ($posted['mtorque'] != '1.0' || $posted['atorque'] != '0') {
+    if ($posted['mtorque'] != '1.0' || $posted['atorque'] != '0' || $posted['vvlrpm'] != '0') {
         for ($i = 2; $i < count($new_torque); $i++) {
             $new_torque[$i][1] = round((floatval($new_torque[$i][1]) + floatval($posted['atorque'])) * floatval($posted['mtorque']), 2);
+            if (intval($new_torque[$i][0]) >= intval($posted['vvlrpm'])) {
+                $new_torque[$i][1] = round((floatval($new_torque[$i][1]) + floatval($posted['vvlatorque'])) * floatval($posted['vvlmtorque']), 2);
+            }
         }
     }
-    
+
     return array("new_torque" => $new_torque, "new_psi" => $new_PSI);
 }
 

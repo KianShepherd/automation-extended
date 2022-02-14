@@ -7,6 +7,7 @@ function getEngineData($jbeam_content) {
     $engine_data['max_rpm'] = end($jbeam_content['Camso_Engine']['mainEngine']['torque'])[0];
     $engine_data['torque_at_max'] = end($jbeam_content['Camso_Engine']['mainEngine']['torque'])[1];
     $engine_data['has_turbo'] = array_key_exists('Camso_Turbo', $jbeam_content);
+    $engine_data['inertia'] = $jbeam_content['Camso_Engine']['mainEngine']['inertia'];
     
     return $engine_data;
 }
