@@ -13,8 +13,8 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
-        ["$n2o_rpm", "range", "RPM", "Nitrous Oxide", 3500, 800, 15000, "Minimum RPM", "Minimum RPM where nitrous oxide can spray"{"stepDis":50}]
-        ["$n2o_gear", "range", "Gear", "Nitrous Oxide", 3, 1, 9, "Minimum Gear", "Minimum gear where nitrous oxide can spray"{"minDis":1, "maxDis":9, "stepDis":1}]
+        ["$n2o_rpm", "range", "RPM", "Nitrous Oxide", 3500, 800, 25000, "Minimum RPM", "Minimum RPM where nitrous oxide can spray"{"stepDis":50}]
+        ["$n2o_gear", "range", "Gear", "Nitrous Oxide", 2, 1, 10, "Minimum Gear", "Minimum gear where nitrous oxide can spray"{"minDis":1, "maxDis":10, "stepDis":1}]
     ],
     "powertrain": [
         ["type", "name", "inputName", "inputIndex"],
