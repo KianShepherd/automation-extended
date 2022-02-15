@@ -36,11 +36,15 @@ if ($res === TRUE) {
   die();
 }
 
+//pprint(getSuspensionData(jbeam_to_json($jbeam_folder, "suspension_R.jbeam")['Camso_brake_R']['pressureWheels']));
+
 $smarty->assign('hash', $hash);
 $smarty->assign('filename' , basename($filename));
 $smarty->assign('engine', getEngineData(jbeam_to_json($jbeam_folder, "camso_engine.jbeam")));
 $smarty->assign('front_tires', getTireData(jbeam_to_json($jbeam_folder, "wheels_front.jbeam")['wheels_front']['pressureWheels']));
 $smarty->assign('rear_tires', getTireData(jbeam_to_json($jbeam_folder, "wheels_rear.jbeam")['wheels_rear']['pressureWheels']));
+$smarty->assign('front_brakes', getSuspensionData(jbeam_to_json($jbeam_folder, "suspension_F.jbeam")['Camso_brake_F']['pressureWheels']));
+$smarty->assign('rear_brakes', getSuspensionData(jbeam_to_json($jbeam_folder, "suspension_R.jbeam")['Camso_brake_R']['pressureWheels']));
 
 $smarty->display('templates/ajax_replace.tpl');
 

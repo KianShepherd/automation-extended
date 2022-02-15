@@ -29,6 +29,22 @@ function getTireData($jbeam_content) {
     return $tire_data;
 }
 
+function getSuspensionData($jbeam_content) {
+    $suspension_data = [];
+    foreach ($jbeam_content as $line) {
+        if (array_key_exists('brakeTorque', $line)) {     
+            $suspension_data['brakeTorque'] = $line['brakeTorque'];
+        }
+        if (array_key_exists('parkingTorque', $line)) {     
+            $suspension_data['parkingTorque'] = $line['parkingTorque'];
+        }
+        if (array_key_exists('brakeVentingCoef', $line)) {     
+            $suspension_data['brakeVentingCoef'] = $line['brakeVentingCoef'];
+        }
+    }
+    return $suspension_data;
+}
+
 
 function GetStrippedFileContent($jbeam_folder, $filename) {
     $fileStr = file_get_contents($jbeam_folder . $filename);
@@ -74,6 +90,7 @@ function jbeam_to_json($jbeam_folder, $filename) {
     $full_content = preg_replace("/,,/",",", ($full_content));
     $full_content = preg_replace("/(\d) {/","$1, {", ($full_content));
     $full_content = preg_replace("/\"\s?{/","\", {", ($full_content));
+    $full_content = preg_replace("/\d(\s)+\"/","$1, \"", ($full_content));
     $full_content = substr($full_content, 0, -1);
 
     return json_decode($full_content, true);

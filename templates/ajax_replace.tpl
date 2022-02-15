@@ -4,12 +4,20 @@
     <table style="left: 0px; position: absolute; top: 0; width: 100%; background-color: #919191;">
         <tr>
             <td id="t_engine" onclick="changeTo('engine-editor', 't_engine'); return false;"
-                style="width: 50%; padding: 15px; background-color: #4fedff; text-align: center;">
+                style="width: 25%; padding: 15px; background-color: #4fedff; text-align: center;">
                 <h1 class="header-data">Engine</h1>
             </td>
             <td  id="t_tires" onclick="changeTo('tire-editor', 't_tires'); return false;"
-                style="width: 50%; padding: 15px; text-align: center; background-color: #919191;">
+                style="width: 25%; padding: 15px; text-align: center; background-color: #919191;">
                 <h1 class="header-data">Tires</h1>
+            </td>
+            <td  id="t_brakes" onclick="changeTo('brakes-editor', 't_brakes'); return false;"
+                style="width: 25%; padding: 15px; text-align: center; background-color: #919191;">
+                <h1 class="header-data">Brakes</h1>
+            </td>
+            <td  id="t_transmission" onclick="changeTo('transmission-editor', 't_transmission'); return false;"
+                style="width: 25%; padding: 15px; text-align: center; background-color: #919191;">
+                <h1 class="header-data">Transmission</h1>
             </td>
         </tr>
     </table>
@@ -158,6 +166,70 @@
             </tr>
         </table>
     </div>
+    <div id="brakes-editor" style="display: none;">
+        <table style="margin: auto;">
+            <tr>
+                <td style="height: 90px; padding: 20px;">
+                </td>
+                <td style="padding: 20px;">
+                    <h2 style="margin: auto; font-family: 'Courier New', monospace;">Front</h2>
+                </td>
+                <td>
+                    <h2 style="margin: auto; font-family: 'Courier New', monospace;">Rear</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Brake Torque</h3></td>
+                <td style="padding: 20px;">
+                    <textarea rows="1" cols="20" name="fbraketorque" id="fbraketorque" style="resize: none;">{$front_brakes.brakeTorque}</textarea>
+                </td>
+                <td>
+                    <textarea rows="1" cols="20" name="rbraketorque" id="rbraketorque" style="resize: none;">{$rear_brakes.brakeTorque}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Parking Torque</h3></td>
+                <td style="padding: 20px;">
+                    <textarea rows="1" cols="20" name="fbrakeparking" id="fbrakeparking" style="resize: none;">{$front_brakes.parkingTorque}</textarea>
+                </td>
+                <td>
+                    <textarea rows="1" cols="20" name="rbrakeparking" id="rbrakeparking" style="resize: none;">{$rear_brakes.parkingTorque}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Brake Venting Coefficient</h3></td>
+                <td style="padding: 20px;">
+                    <textarea rows="1" cols="20" name="fbrakevent" id="fbrakevent" style="resize: none;">{$front_brakes.brakeVentingCoef}</textarea>
+                </td>
+                <td>
+                    <textarea rows="1" cols="20" name="rbrakevent" id="rbrakevent" style="resize: none;">{$rear_brakes.brakeVentingCoef}</textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="transmission-editor" style="display: none;">
+        <table style="margin: auto;">
+            <tr>
+                <td style="height: 90px; padding: 20px;">
+                </td>
+                <td style="padding: 20px;">
+                    <h2 style="margin: auto; font-family: 'Courier New', monospace;">Front</h2>
+                </td>
+                <td>
+                    <h2 style="margin: auto; font-family: 'Courier New', monospace;">Rear</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Friction coefficient</h3></td>
+                <td style="padding: 20px;">
+                    <textarea rows="1" cols="8" name="fmfric" id="fmfric" style="resize: none;">{$front_tires.friccoef}</textarea>
+                </td>
+                <td>
+                <textarea rows="1" cols="8" name="rmfric" id="rmfric" style="resize: none;">{$rear_tires.friccoef}</textarea>
+            </td>
+            </tr>
+        </table>
+    </div>
     <button id="submit-button" type="submit" hidden>Download Updated File</button>
 </form>
 
@@ -166,8 +238,12 @@
         function resetAll() {
             $('#engine-editor').css("display", "none");
             $('#tire-editor').css("display", "none");
+            $('#brakes-editor').css("display", "none");
+            $('#transmission-editor').css("display", "none");
             $('#t_engine').css({"padding" : "15px", "background-color": "#919191"});
             $('#t_tires').css({"padding" : "15px", "background-color": "#919191"});
+            $('#t_brakes').css({"padding" : "15px", "background-color": "#919191"});
+            $('#t_transmission').css({"padding" : "15px", "background-color": "#919191"});
         }
 
         function changeTo(div_id, selector_id) {

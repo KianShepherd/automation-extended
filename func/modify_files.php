@@ -82,6 +82,27 @@ function modifyEngineTorque($engine_torque, $posted) {
     return array("new_torque" => $new_torque, "new_psi" => $new_PSI);
 }
 
+function modifyBrakeData($jbeam_filename, $jbeam_target, $brake_torque, $parking_torque, $vent_coef) {
+    $brake_data = jbeam_to_json($jbeam_folder, $jbeam_filename);
+    unlink($jbeam_filename);
+
+    for ($i = 0; $i < count($brake_data[$jbeam_target]['pressureWheels']); $i++) {
+        if (array_key_exists('brakeTorque', $brake_data[$jbeam_target]['pressureWheels'][$i])) {     
+            $brake_data[$jbeam_target]['pressureWheels'][$i]['brakeTorque'] = floatval($brake_torque);
+        }
+        if (array_key_exists('parkingTorque', $brake_data[$jbeam_target]['pressureWheels'][$i])) {     
+            $brake_data[$jbeam_target]['pressureWheels'][$i]['parkingTorque'] = floatval($parking_torque);
+        }
+        if (array_key_exists('brakeVentingCoef', $brake_data[$jbeam_target]['pressureWheels'][$i])) {     
+            $brake_data[$jbeam_target]['pressureWheels'][$i]['brakeVentingCoef'] = floatval($vent_coef);
+        }
+    }
+    
+    $myfile = fopen($jbeam_filename, "w");
+    fwrite($myfile, json_encode($brake_data, JSON_PRETTY_PRINT));
+    fclose($myfile);
+} 
+
 /*
 array (
   'hash' => 'a63b40a0392192058180cd48365ffc4b',
@@ -102,3 +123,5 @@ $file_name_no_ext = substr(basename($_POST['filename']), 0, strlen(basename($_PO
 modifyEngineData("tmp_uploads/$_POST[hash]/vehicle_data/vehicles/$file_name_no_ext/camso_engine.jbeam", $_POST, $file_name_no_ext, $_POST['hash']);
 modifyTireData("tmp_uploads/$_POST[hash]/vehicle_data/vehicles/$file_name_no_ext/wheels_front.jbeam", "wheels_front", $_POST['fmfric'], $_POST['fmsfric'], $_POST['fmofric']);
 modifyTireData("tmp_uploads/$_POST[hash]/vehicle_data/vehicles/$file_name_no_ext/wheels_rear.jbeam", "wheels_rear", $_POST['rmfric'], $_POST['rmsfric'], $_POST['rmofric']);
+modifyBrakeData("tmp_uploads/$_POST[hash]/vehicle_data/vehicles/$file_name_no_ext/suspension_F.jbeam", "Camso_brake_F", $_POST['fbraketorque'], $_POST['fbrakeparking'], $_POST['fbrakevent']);
+modifyBrakeData("tmp_uploads/$_POST[hash]/vehicle_data/vehicles/$file_name_no_ext/suspension_R.jbeam", "Camso_brake_R", $_POST['rbraketorque'], $_POST['rbrakeparking'], $_POST['rbrakevent']);
