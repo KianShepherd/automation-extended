@@ -210,23 +210,34 @@
     <div id="transmission-editor" style="display: none;">
         <table style="margin: auto;">
             <tr>
-                <td style="height: 90px; padding: 20px;">
-                </td>
+                <td><input name="cvt" type="checkbox" {if $engine.cvt.has_cvt}checked{/if}></td>
+                <td style="font-size:18px;  font-family: 'Courier New', monospace;"><b>CVT Swap</b></td>
+            </tr>
+        </table>
+        <table style="margin: auto;">
+            <tr>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Min Gear Ratio</h3></td>
                 <td style="padding: 20px;">
-                    <h2 style="margin: auto; font-family: 'Courier New', monospace;">Front</h2>
-                </td>
-                <td>
-                    <h2 style="margin: auto; font-family: 'Courier New', monospace;">Rear</h2>
+                    <textarea rows="1" cols="20" name="cvtmin" id="cvtmin" style="resize: none;">{$engine.cvt.minGearRatio}</textarea>
                 </td>
             </tr>
             <tr>
-                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Friction coefficient</h3></td>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Max Gear Ratio</h3></td>
                 <td style="padding: 20px;">
-                    <textarea rows="1" cols="8" name="fmfric" id="fmfric" style="resize: none;">{$front_tires.friccoef}</textarea>
+                    <textarea rows="1" cols="20" name="cvtmax" id="cvtmax" style="resize: none;">{$engine.cvt.maxGearRatio}</textarea>
                 </td>
-                <td>
-                <textarea rows="1" cols="8" name="rmfric" id="rmfric" style="resize: none;">{$rear_tires.friccoef}</textarea>
-            </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">Low RPM</h3></td>
+                <td style="padding: 20px;">
+                    <textarea rows="1" cols="20" name="cvtlow" id="cvtlow" style="resize: none;">{$engine.cvt.cvtLowRPM}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; text-align: center"><h3 style="margin: auto; font-family: 'Courier New', monospace;">High RPM</h3></td>
+                <td style="padding: 20px;">
+                    <textarea rows="1" cols="20" name="cvthigh" id="cvthigh" style="resize: none;">{$engine.cvt.cvtHighRPM}</textarea>
+                </td>
             </tr>
         </table>
     </div>

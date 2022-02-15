@@ -1,6 +1,7 @@
 <?php
 function getEngineData($jbeam_content) {
     $engine_data = [];
+    $cvt_data = [];
     $engine_data['torque_curve'] = $jbeam_content['Camso_Engine']['mainEngine']['torque'];
     $engine_data['gear_ratios'] = $jbeam_content['Camso_Transmission']['gearbox']['gearRatios'];
     $engine_data['gear_ratio_str'] = implode(", ", $engine_data['gear_ratios']);
@@ -8,7 +9,20 @@ function getEngineData($jbeam_content) {
     $engine_data['torque_at_max'] = end($jbeam_content['Camso_Engine']['mainEngine']['torque'])[1];
     $engine_data['has_turbo'] = array_key_exists('Camso_Turbo', $jbeam_content);
     $engine_data['inertia'] = $jbeam_content['Camso_Engine']['mainEngine']['inertia'];
-    
+    $cvt_data['has_cvt'] = isset($jbeam_content['Camso_Engine']['vehicleController']['cvtLowRPM']);
+    if ($cvt_data['has_cvt']) {
+        $cvt_data['minGearRatio'] = $jbeam_content['Camso_Transmission']['gearbox']['minGearRatio'];
+        $cvt_data['maxGearRatio'] = $jbeam_content['Camso_Transmission']['gearbox']['maxGearRatio'];
+        $cvt_data['cvtLowRPM'] = $jbeam_content['Camso_Engine']['vehicleController']['cvtLowRPM'];
+        $cvt_data['cvtHighRPM'] = $jbeam_content['Camso_Engine']['vehicleController']['cvtHighRPM'];
+    } else {
+        $cvt_data['maxGearRatio'] = $engine_data['gear_ratios'][2];
+        $cvt_data['minGearRatio'] = end($engine_data['gear_ratios']);
+        $cvt_data['cvtLowRPM'] = 2000;
+        $cvt_data['cvtHighRPM'] = intval($engine_data['max_rpm']) - 100;
+    }
+    $engine_data['cvt'] = $cvt_data;
+
     return $engine_data;
 }
 

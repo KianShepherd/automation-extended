@@ -20,8 +20,9 @@ function modifyTireData($jbeam_filename, $jbeam_target, $friction_value, $slidin
     fclose($myfile);
 } 
 
-function modifyEngineData($jbeam_filename,  &$posted, $filename_no_ext, $hash) {
+function modifyEngineData($jbeam_filename,  $posted, $filename_no_ext, $hash) {
     $engine_data = jbeam_to_json($jbeam_folder, $jbeam_filename);
+    $engine_stats = getEngineData($engine_data);
     unlink($jbeam_filename);
 
     if ($posted['msuper'] == 'on') {
@@ -46,6 +47,9 @@ function modifyEngineData($jbeam_filename,  &$posted, $filename_no_ext, $hash) {
     $engine_data['Camso_Engine']['mainEngine']['torque'] = $mod_power['new_torque'];
     if (array_key_exists("Camso_Turbo", $engine_data)) {
         $engine_data['Camso_Turbo']['turbocharger']['engineDef'] = $mod_power['new_psi'];
+    }
+    if ($posted['cvt'] == 'on') {
+        modifyCVT($engine_data, $engine_stats, $posted);
     }
     
     $myfile = fopen($jbeam_filename, "w");
@@ -80,6 +84,40 @@ function modifyEngineTorque($engine_torque, $posted) {
     }
 
     return array("new_torque" => $new_torque, "new_psi" => $new_PSI);
+}
+
+function modifyCVT(&$engine_data, $engine_stats, $posted) {
+    if ($engine_stats['cvt']['has_cvt'] != True) {
+        unset($engine_data['Camso_Transmission']['gearbox']['gearRatios']);
+        unset($engine_data['Camso_Transmission']['gearbox']['gearChangeTime']);
+        unset($engine_data['Camso_Transmission']['gearbox']['shiftEfficiency']);
+        unset($engine_data['Camso_Engine']['vehicleController']['lowShiftDownRPM']);
+        unset($engine_data['Camso_Engine']['vehicleController']['lowShiftUpRPM']);
+        unset($engine_data['Camso_Engine']['vehicleController']['highShiftDownRPM']);
+        unset($engine_data['Camso_Engine']['vehicleController']['highShiftUpRPM']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['transmissionGearChangeDelay']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['gearboxDecisionSmoothingUp']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['gearboxDecisionSmoothingDown']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['sportGearChangeTime']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['maxGearChangeTime']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['minGearChangeTime']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['autoDownShiftInM']);
+        unset($engine_data['Camso_Transmission']['vehicleController']['torqueConverterLockupMinGear']);
+
+        $engine_data['Camso_Transmission']['vehicleController']['torqueConverterLockupRPM'] = intval($posted['cvtlow']);
+        $engine_data['Camso_Transmission']['vehicleController']['automaticModes'] = "PRNDS";
+        $engine_data['Camso_Engine']['vehicleController']['calculateOptimalLoadShiftPoints'] = false;
+
+        for ($i = 0; $i < count($engine_data['Camso_Transmission']['powertrain']); $i++) {
+            if ($engine_data['Camso_Transmission']['powertrain'][$i][0] == "automaticGearbox") {
+                $engine_data['Camso_Transmission']['powertrain'][$i][0] = "cvtGearbox";
+            }
+        }
+    }
+    $engine_data['Camso_Transmission']['gearbox']['minGearRatio'] = floatval($posted['cvtmin']);
+    $engine_data['Camso_Transmission']['gearbox']['maxGearRatio'] = floatval($posted['cvtmax']);
+    $engine_data['Camso_Engine']['vehicleController']['cvtLowRPM'] = intval($posted['cvtlow']);
+    $engine_data['Camso_Engine']['vehicleController']['cvtHighRPM'] = intval($posted['cvthigh']);
 }
 
 function modifyBrakeData($jbeam_filename, $jbeam_target, $brake_torque, $parking_torque, $vent_coef) {
