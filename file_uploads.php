@@ -23,8 +23,7 @@ if ($fileType != "zip") {
 $file_name_no_ext = substr(basename($filename), 0, strlen(basename($filename)) - 4);
 $jbeam_folder = $target_dir . "vehicle_data/vehicles/$file_name_no_ext/";
 
-mkdir($target_dir);
-mkdir($target_dir . "vehicle_data/");
+mkdir($target_dir . "vehicle_data/", 0777, true);
 move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
 
 $zip = new ZipArchive;
@@ -37,24 +36,15 @@ if ($res === TRUE) {
   die();
 }
 
-//pprint($page_data); 
-$engine_content = GetStrippedFileContent($jbeam_folder, "camso_engine.jbeam");
-$engine_data = getEngineData($engine_content);
-$gear_str = substr($engine_data['gear_ratios'], 1, count($engine_data['gear_ratios']) - 2);
-
-$front_content = GetStrippedFileContent($jbeam_folder, "wheels_front.jbeam");
-$front_data = getTireData($front_content);
-
-$rear_content = GetStrippedFileContent($jbeam_folder, "wheels_rear.jbeam");
-$rear_data = getTireData($rear_content);
+//pprint(getSuspensionData(jbeam_to_json($jbeam_folder, "suspension_R.jbeam")['Camso_brake_R']['pressureWheels']));
 
 $smarty->assign('hash', $hash);
 $smarty->assign('filename' , basename($filename));
-$smarty->assign('gear_str', $gear_str);
-$smarty->assign('max_rpm', $engine_data['max_rpm']);
-$smarty->assign('torque_at_max', $engine_data['torque_at_max']);
-$smarty->assign('front', $front_data);
-$smarty->assign('rear', $rear_data);
+$smarty->assign('engine', getEngineData(jbeam_to_json($jbeam_folder, "camso_engine.jbeam")));
+$smarty->assign('front_tires', getTireData(jbeam_to_json($jbeam_folder, "wheels_front.jbeam")['wheels_front']['pressureWheels']));
+$smarty->assign('rear_tires', getTireData(jbeam_to_json($jbeam_folder, "wheels_rear.jbeam")['wheels_rear']['pressureWheels']));
+$smarty->assign('front_brakes', getSuspensionData(jbeam_to_json($jbeam_folder, "suspension_F.jbeam")['Camso_brake_F']['pressureWheels']));
+$smarty->assign('rear_brakes', getSuspensionData(jbeam_to_json($jbeam_folder, "suspension_R.jbeam")['Camso_brake_R']['pressureWheels']));
 
 $smarty->display('templates/ajax_replace.tpl');
 

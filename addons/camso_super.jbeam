@@ -12,11 +12,11 @@
 		"variables":
 		[
 			["name", "type", "unit", "category", "default", "min", "max", "title", "description"] // Format
-			["$S8Cgr0", "range", "Ratio", "Supercharger",           2,      1,      10,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
+			["$S8Cgr0", "range", "Ratio", "Supercharger",           2,      1,     15,  "Gear Ratio",        "Gear drive Ratio"            , {"stepDis":0.1}]  ,
 			["$S7Cov0", "range", "%",     "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
 			["$S1Cce0", "range", "RPM",   "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"          , {"stepDis":10}]   ,
-			["$S5Cpr0", "range", "%",     "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
-			["$S2Cpp0", "range", "PSI",   "Supercharger",         2.0,    1.5,    10.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
+			["$S5Cpr0", "range", "%",     "Supercharger",          25,      0,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
+			["$S2Cpp0", "range", "PSI",   "Supercharger",         2.0,    1.5,   25.0,  "Power",            "PSI      "                    , {"stepDis":0.1}]  ,			
 		    ["$S6Ccl0", "range", "%",     "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
 			["$S4ine0", "range", "%",     "Audio:Supercharger",    60,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
 			["$S3tch0", "range", "%",     "Audio:Supercharger",   100,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
@@ -68,7 +68,7 @@
 			["$S7Cov1", "range", "%",   "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
 			["$S1Cce1", "range", "RPM", "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"           , {"stepDis":10}]  ,
 			["$S5Cpr1", "range", "%",   "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
-			["$S2Cpp1", "range", "PSI", "Supercharger",         2.0,    1.5,   10.0,  "Power",             "PSI Limit"                    , {"stepDis":0.1}]  ,			
+			["$S2Cpp1", "range", "PSI", "Supercharger",         2.0,    1.5,   25.0,  "Power",             "PSI Limit"                    , {"stepDis":0.1}]  ,			
 		    ["$S6Ccl1", "range", "%",   "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
 			["$S4ine1", "range", "%",   "Audio:Supercharger",    50,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
 			["$S3tch1", "range", "%",   "Audio:Supercharger",   150,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
@@ -115,11 +115,11 @@
 		"variables":
 		[
 			["name", "type", "unit", "category", "default", "min", "max", "title", "description"] // Format
-			["$S8Cgr2", "range", "Ratio", "Supercharger",           2,      2,      10,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
+			["$S8Cgr2", "range", "Ratio", "Supercharger",           2,      2,      15,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
 			["$S7Cov2", "range", "%",     "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
 			["$S1Cce2", "range", "RPM",   "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"          , {"stepDis":10}]   ,
 			["$S5Cpr2", "range", "%",     "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
-			["$S2Cpp2", "range", "PSI",   "Supercharger",         2.0,    1.5,    10.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
+			["$S2Cpp2", "range", "PSI",   "Supercharger",         2.0,    1.5,    25.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
 		    ["$S6Ccl2", "range", "%",     "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
 			["$S4ine2", "range", "%",     "Audio:Supercharger",    80,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
 			["$S3tch2", "range", "%",     "Audio:Supercharger",   100,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
@@ -166,11 +166,11 @@
 		"variables":
 		[
 			["name", "type", "unit", "category", "default", "min", "max", "title", "description"] // Format
-			["$S8Cgr3", "range", "Ratio", "Supercharger",           2,      2,      10,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
+			["$S8Cgr3", "range", "Ratio", "Supercharger",           2,      2,      15,  "Gear Ratio",        "Gear drive Ratio"             , {"stepDis":0.1}]  ,
 			["$S7Cov3", "range", "%",     "Supercharger",           0,      0,    100,  "Overdrive",         "Extend performance over limit", {"stepDis":1}]    ,			
 			["$S1Cce3", "range", "RPM",   "Supercharger",           0,      0,  50000,  "Clutch Engage RPM", "Supercharger Clutch"          , {"stepDis":10}]   ,
 			["$S5Cpr3", "range", "%",     "Supercharger",          25,     00,    100,  "Rate",              "Pressure rate to intake"      , {"stepDis":1}]    ,			
-			["$S2Cpp3", "range", "PSI",   "Supercharger",         2.0,    1.5,    10.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
+			["$S2Cpp3", "range", "PSI",   "Supercharger",         2.0,    1.5,    25.0,  "Power",             "PSI      "                    , {"stepDis":0.1}]  ,			
 		    ["$S6Ccl3", "range", "%",     "Supercharger",          50,      0,    100,  "Friction",          "Internal friction"            , {"stepDis":2}]    ,		  
 			["$S4ine3", "range", "%",     "Audio:Supercharger",    50,      1,    100,  "Audio loudness",    "Audio gain per PSI"           , {"stepDis":1}]    ,
 			["$S3tch3", "range", "%",     "Audio:Supercharger",   150,    100,    200,  "Pitch Dynamics",    "Audio Pitch Factor per 10kRPM", {"stepDis":1}]    ,
